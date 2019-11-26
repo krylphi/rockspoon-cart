@@ -32,7 +32,7 @@ func InitMockRepo() repository.CartRepository {
 }
 
 func (c *cartMockRepository) CreateCart(ctx context.Context) (*domain.Cart, error) {
-	id := strconv.Itoa(len(c.carts)+1)
+	id := strconv.Itoa(len(c.carts) + 1)
 	cart := &domain.Cart{
 		ID:    id,
 		Items: make([]*domain.CartItem, 0),
@@ -95,4 +95,3 @@ func (c *cartMockRepository) Cart(ctx context.Context, id string) (*domain.Cart,
 
 	return cart, nil
 }
-

@@ -50,7 +50,6 @@ func RouterInit(r *mux.Router, write repository.CartWriteRepository, read reposi
 	return r
 }
 
-
 type endpointFactory struct {
 	write repository.CartWriteRepository
 	read  repository.CartReadRepository

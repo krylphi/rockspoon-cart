@@ -19,8 +19,8 @@ func TestCartItem_Validate(t *testing.T) {
 	}{
 		// TODO: Add test cases.
 		{
-			name:    "Test empty Product",
-			fields:  fields{
+			name: "Test empty Product",
+			fields: fields{
 				ID:       "ID",
 				CartID:   "CartID",
 				Product:  "",
@@ -30,8 +30,8 @@ func TestCartItem_Validate(t *testing.T) {
 			expectedErr: ErrEmptyProduct,
 		},
 		{
-			name:    "Test Zero Quantity",
-			fields:  fields{
+			name: "Test Zero Quantity",
+			fields: fields{
 				ID:       "ID",
 				CartID:   "CartID",
 				Product:  "Product",

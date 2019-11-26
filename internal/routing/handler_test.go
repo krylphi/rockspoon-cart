@@ -29,7 +29,7 @@ func Test_Handlers(t *testing.T) {
 		Items []*ciResponse `json:"items,omitempty"`
 	}
 
-	jsonVal:= bytes.NewBuffer([]byte(`{"product": "Shoes","quantity": 10}`))
+	jsonVal := bytes.NewBuffer([]byte(`{"product": "Shoes","quantity": 10}`))
 
 	t.Run("Test_HandleNewCart", func(t *testing.T) {
 		router := initRouting()
@@ -94,7 +94,6 @@ func Test_Handlers(t *testing.T) {
 			t.Errorf("Test_HandleGetCartFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
 	})
-
 
 	t.Run("Test_HandleDeleteCart", func(t *testing.T) {
 		router := initRouting()

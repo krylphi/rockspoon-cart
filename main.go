@@ -49,7 +49,6 @@ func run(c *cli.Context) error {
 	return http.ListenAndServe(getEnv("HOST", "0.0.0.0")+":"+getEnv("PORT", "8080"), routing.RouterInit(r, repo, repo))
 }
 
-
 func main() {
 	app := cli.NewApp()
 	app.Name = "User Management API"

@@ -114,7 +114,7 @@ func TestCart_RemoveItem(t *testing.T) {
 	}
 
 	testCart := fields{
-		ID:    "CartID",
+		ID: "CartID",
 		Items: []*CartItem{
 			{
 				ID:       "Item1",
@@ -152,15 +152,15 @@ func TestCart_RemoveItem(t *testing.T) {
 	}{
 		// TODO: Add test cases.
 		{
-			name:        "No such item",
-			fields:      testCart,
-			args:        args{
+			name:   "No such item",
+			fields: testCart,
+			args: args{
 				id: "NoExistingId",
 			},
 			wantErr:     true,
 			expectedErr: ErrNoSuchCartItem,
 		}, {
-			name: "Regular delete",
+			name:   "Regular delete",
 			fields: testCart,
 			args: args{
 				id: "Item2",
