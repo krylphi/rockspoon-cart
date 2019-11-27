@@ -9,7 +9,6 @@ import (
 	"github.com/Krylphi/rockspoon-cart/internal/repository/mongo"
 	"github.com/Krylphi/rockspoon-cart/internal/routing"
 
-	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
 )
 
