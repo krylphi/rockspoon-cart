@@ -14,8 +14,8 @@ import (
 
 const (
 	EnvConnectionString = "CONNSTR"
-	EnvCartDatabase = "CARTDB"
-	EnvCartNamespace = "CARTNAMESPACE"
+	EnvCartDatabase     = "CARTDB"
+	EnvCartNamespace    = "CARTNAMESPACE"
 )
 
 func getEnv(env, def string) string {
@@ -25,8 +25,6 @@ func getEnv(env, def string) string {
 	}
 	return value
 }
-
-
 
 func run(c *cli.Context) error {
 	repo, err := mongo.NewMongoRepository(&mongo.Config{
@@ -39,7 +37,7 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	srv := fmt.Sprint(getEnv("HOST", "0.0.0.0"),":", getEnv("PORT", "8080"))
+	srv := fmt.Sprint(getEnv("HOST", "0.0.0.0"), ":", getEnv("PORT", "8080"))
 	log.Printf("service address: %v", srv)
 	return http.ListenAndServe(srv, routing.RouterInit(repo, repo))
 }
