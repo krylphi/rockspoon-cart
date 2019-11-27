@@ -60,7 +60,7 @@ func main() {
 	}
 
 	app := cli.NewApp()
-	app.Name = "User Management API"
+	app.Name = "Cart Management API"
 	app.Usage = "provide capabilities of creating updating, deleting shopping carts"
 	app.UsageText = "rockspoon-cart [global options]"
 	app.Version = version
