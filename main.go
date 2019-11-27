@@ -18,11 +18,6 @@ const (
 	EnvCartNamespace = "CARTNAMESPACE"
 )
 
-var (
-	configPath = "./config/.env"
-	version    = "0.0.1"
-)
-
 func getEnv(env, def string) string {
 	value, exists := os.LookupEnv(env)
 	if !exists {
@@ -31,14 +26,7 @@ func getEnv(env, def string) string {
 	return value
 }
 
-var flags = []cli.Flag{
-	&cli.StringFlag{
-		Name:        "config, c",
-		Value:       configPath,
-		Usage:       "path to .env config file",
-		Destination: &configPath,
-	},
-}
+
 
 func run(c *cli.Context) error {
 	repo, err := mongo.NewMongoRepository(&mongo.Config{
@@ -50,10 +38,27 @@ func run(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	return http.ListenAndServe(fmt.Sprintf(getEnv("HOST", "0.0.0.0"),":", getEnv("PORT", "8080")), routing.RouterInit(repo, repo))
+
+	srv := fmt.Sprint(getEnv("HOST", "0.0.0.0"),":", getEnv("PORT", "8080"))
+	log.Printf("service address: %v", srv)
+	return http.ListenAndServe(srv, routing.RouterInit(repo, repo))
 }
 
 func main() {
+	var (
+		configPath = "./config/.env"
+		version    = "0.0.1"
+	)
+
+	var flags = []cli.Flag{
+		&cli.StringFlag{
+			Name:        "config, c",
+			Value:       configPath,
+			Usage:       "path to .env config file",
+			Destination: &configPath,
+		},
+	}
+
 	app := cli.NewApp()
 	app.Name = "User Management API"
 	app.Usage = "provide capabilities of creating updating, deleting shopping carts"
