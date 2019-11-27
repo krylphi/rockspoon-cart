@@ -13,12 +13,12 @@ import (
 )
 
 type EndpointFactory interface {
-	HandleHeartbeat() HttpEndpoint
-	HandleNewCart() HttpEndpoint
-	HandleAddItem(cartIDParam string) HttpEndpoint
-	HandleRemoveItem(cartIDParam, itemIDParam string) HttpEndpoint
-	HandleDeleteCart(cartIDParam string) HttpEndpoint
-	HandleGetCart(cartIDParam string) HttpEndpoint
+	HandleHeartbeat() HTTPEndpoint
+	HandleNewCart() HTTPEndpoint
+	HandleAddItem(cartIDParam string) HTTPEndpoint
+	HandleRemoveItem(cartIDParam, itemIDParam string) HTTPEndpoint
+	HandleDeleteCart(cartIDParam string) HTTPEndpoint
+	HandleGetCart(cartIDParam string) HTTPEndpoint
 }
 
 func RouterInit(write repository.CartWriteRepository, read repository.CartReadRepository) *mux.Router {
@@ -27,29 +27,29 @@ func RouterInit(write repository.CartWriteRepository, read repository.CartReadRe
 
 	// Heartbeat
 	r.HandleFunc(
-		"/heartbeat", Json(fac.HandleHeartbeat()),
+		"/heartbeat", JSON(fac.HandleHeartbeat()),
 	).Methods(http.MethodGet)
 
 	//Cart commands
 	r.HandleFunc(
-		"/carts", Json(fac.HandleNewCart()),
+		"/carts", JSON(fac.HandleNewCart()),
 	).Methods(http.MethodPost)
 
 	r.HandleFunc(
-		"/carts/{id}", Json(fac.HandleGetCart("id")),
+		"/carts/{id}", JSON(fac.HandleGetCart("id")),
 	).Methods(http.MethodGet)
 
 	r.HandleFunc(
-		"/carts/{id}", Json(fac.HandleDeleteCart("id")),
+		"/carts/{id}", JSON(fac.HandleDeleteCart("id")),
 	).Methods(http.MethodDelete)
 
 	// Items commands
 	r.HandleFunc(
-		"/carts/{id}/items", Json(fac.HandleAddItem("id")),
+		"/carts/{id}/items", JSON(fac.HandleAddItem("id")),
 	).Methods(http.MethodPost)
 
 	r.HandleFunc(
-		"/carts/{cart}/items/{item}", Json(fac.HandleRemoveItem("cart", "item")),
+		"/carts/{cart}/items/{item}", JSON(fac.HandleRemoveItem("cart", "item")),
 	).Methods(http.MethodDelete)
 
 	return r
@@ -67,8 +67,8 @@ func NewEndpointFactory(write repository.CartWriteRepository, read repository.Ca
 	}
 }
 
-func (f *endpointFactory) HandleHeartbeat() HttpEndpoint {
-	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
+func (f *endpointFactory) HandleHeartbeat() HTTPEndpoint {
+	return func(w http.ResponseWriter, r *http.Request) HTTPResponse {
 		return OK(struct {
 			Result string `json:"result"`
 		}{
@@ -77,8 +77,8 @@ func (f *endpointFactory) HandleHeartbeat() HttpEndpoint {
 	}
 }
 
-func (f *endpointFactory) HandleNewCart() HttpEndpoint {
-	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
+func (f *endpointFactory) HandleNewCart() HTTPEndpoint {
+	return func(w http.ResponseWriter, r *http.Request) HTTPResponse {
 		res, err := f.write.CreateCart(r.Context())
 		if err != nil {
 			return BadRequestErrResp(err)
@@ -87,8 +87,8 @@ func (f *endpointFactory) HandleNewCart() HttpEndpoint {
 	}
 }
 
-func (f *endpointFactory) HandleAddItem(cartIDParam string) HttpEndpoint {
-	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
+func (f *endpointFactory) HandleAddItem(cartIDParam string) HTTPEndpoint {
+	return func(w http.ResponseWriter, r *http.Request) HTTPResponse {
 		decoder := json.NewDecoder(r.Body)
 		defer func() {
 			err := r.Body.Close()
@@ -115,9 +115,8 @@ func (f *endpointFactory) HandleAddItem(cartIDParam string) HttpEndpoint {
 	}
 }
 
-func (f *endpointFactory) HandleRemoveItem(cartIDParam, itemIDParam string) HttpEndpoint {
-	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
-
+func (f *endpointFactory) HandleRemoveItem(cartIDParam, itemIDParam string) HTTPEndpoint {
+	return func(w http.ResponseWriter, r *http.Request) HTTPResponse {
 		vars := mux.Vars(r)
 		cartID := vars[cartIDParam]
 		itemID := vars[itemIDParam]
@@ -131,9 +130,8 @@ func (f *endpointFactory) HandleRemoveItem(cartIDParam, itemIDParam string) Http
 	}
 }
 
-func (f *endpointFactory) HandleDeleteCart(cartIDParam string) HttpEndpoint {
-	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
-
+func (f *endpointFactory) HandleDeleteCart(cartIDParam string) HTTPEndpoint {
+	return func(w http.ResponseWriter, r *http.Request) HTTPResponse {
 		vars := mux.Vars(r)
 		cartID := vars[cartIDParam]
 
@@ -146,9 +144,8 @@ func (f *endpointFactory) HandleDeleteCart(cartIDParam string) HttpEndpoint {
 	}
 }
 
-func (f *endpointFactory) HandleGetCart(cartIDParam string) HttpEndpoint {
-	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
-
+func (f *endpointFactory) HandleGetCart(cartIDParam string) HTTPEndpoint {
+	return func(w http.ResponseWriter, r *http.Request) HTTPResponse {
 		vars := mux.Vars(r)
 		id := vars[cartIDParam]
 

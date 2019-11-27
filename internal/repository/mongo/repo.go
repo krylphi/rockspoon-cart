@@ -26,7 +26,7 @@ type (
 	}
 
 	cartModelWrapper struct {
-		ObjId primitive.ObjectID `bson:"_id" json:"_id"`
+		ObjID primitive.ObjectID `bson:"_id" json:"_id"`
 		*domain.Cart
 	}
 )
@@ -38,15 +38,19 @@ func NewMongoRepository(c *Config) (repository.CartRepository, error) {
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Print(err)
+
 		return nil, err
 	}
 	// Check the connection
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Print(err)
+
 		return nil, err
 	}
+
 	log.Print("Connected to MongoDB!")
+
 	return &mongoRepository{
 		collection: client.Database(c.Database).Collection(c.UsersCollection),
 		config:     c,
@@ -59,14 +63,16 @@ func (repo *mongoRepository) CreateCart(ctx context.Context) (*domain.Cart, erro
 	cart := &domain.Cart{ID: sid, Items: make([]*domain.CartItem, 0)}
 
 	cartModel := cartModelWrapper{
-		ObjId: id,
+		ObjID: id,
 		Cart:  cart,
 	}
+
 	_, err := repo.collection.InsertOne(ctx, cartModel)
 	if err != nil {
 		log.Print(err)
 		return nil, err
 	}
+
 	log.Println("Inserted a single Cart document: ", sid)
 
 	return cart, nil
@@ -110,11 +116,11 @@ func (repo *mongoRepository) AddItem(ctx context.Context, cartID string, product
 	}
 
 	log.Println("Updated a single Cart data document: ", cartID)
+
 	return item, nil
 }
 
 func (repo *mongoRepository) RemoveItem(ctx context.Context, cartID string, itemID string) error {
-
 	objID, err := primitive.ObjectIDFromHex(cartID)
 	if err != nil {
 		log.Print(err)
@@ -140,6 +146,7 @@ func (repo *mongoRepository) RemoveItem(ctx context.Context, cartID string, item
 	}
 
 	log.Println("Updated a single User data document: ", cartID)
+
 	return nil
 }
 
@@ -149,6 +156,7 @@ func (repo *mongoRepository) DeleteCart(ctx context.Context, id string) error {
 		log.Print(err)
 		return err
 	}
+
 	singleResult := repo.collection.FindOneAndDelete(ctx, bson.M{"_id": objID})
 	if singleResult != nil {
 		if singleResult.Err() != nil {
@@ -156,11 +164,13 @@ func (repo *mongoRepository) DeleteCart(ctx context.Context, id string) error {
 			return singleResult.Err()
 		}
 	}
+
 	return nil
 }
 
 func (repo *mongoRepository) Cart(ctx context.Context, id string) (*domain.Cart, error) {
 	var result cartModelWrapper
+
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		log.Print(err)
@@ -172,5 +182,6 @@ func (repo *mongoRepository) Cart(ctx context.Context, id string) (*domain.Cart,
 		log.Println(err)
 		return nil, err
 	}
+
 	return result.Cart, nil
 }

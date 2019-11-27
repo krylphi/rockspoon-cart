@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-type HttpHandler func(w http.ResponseWriter, r *http.Request)
+type HTTPHandler func(w http.ResponseWriter, r *http.Request)
 
-type HttpEndpoint func(w http.ResponseWriter, r *http.Request) HttpResponse
+type HTTPEndpoint func(w http.ResponseWriter, r *http.Request) HTTPResponse
 
-type HttpResponse interface {
+type HTTPResponse interface {
 	Headers() map[string]string
 	Response() interface{}
 	StatusCode() int
@@ -34,7 +34,7 @@ func (e *Response) Headers() map[string]string {
 	return e.HeaderData
 }
 
-func Json(fn HttpEndpoint) HttpHandler {
+func JSON(fn HTTPEndpoint) HTTPHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		d := fn(w, r)
 
@@ -47,7 +47,7 @@ func Json(fn HttpEndpoint) HttpHandler {
 		w.WriteHeader(d.StatusCode())
 		err := json.NewEncoder(w).Encode(d.Response())
 		if err != nil {
-			log.Printf("Json() error, while encoding response: %v", err.Error())
+			log.Printf("JSON() error, while encoding response: %v", err.Error())
 		}
 	}
 }
@@ -57,10 +57,10 @@ func Err(status int, data interface{}) *Response {
 }
 
 func Resp(status int, data interface{}) *Response {
-	resp := &Response{}
-	resp.Status = status
-	resp.Data = data
-	return resp
+	return &Response{
+		Status: status,
+		Data:   data,
+	}
 }
 
 func OK(d interface{}) *Response {

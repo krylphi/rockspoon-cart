@@ -18,5 +18,6 @@ func (ci CartItem) Validate() error {
 	if ci.Quantity == 0 {
 		return ErrZeroQuantity
 	}
+
 	return nil
 }

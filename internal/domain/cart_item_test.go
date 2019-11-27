@@ -11,13 +11,13 @@ func TestCartItem_Validate(t *testing.T) {
 		Product  string
 		Quantity int
 	}
+
 	tests := []struct {
 		name        string
 		fields      fields
 		wantErr     bool
 		expectedErr error
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Test empty Product",
 			fields: fields{
@@ -41,6 +41,7 @@ func TestCartItem_Validate(t *testing.T) {
 			expectedErr: ErrZeroQuantity,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ci := CartItem{

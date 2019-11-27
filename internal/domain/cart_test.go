@@ -6,15 +6,18 @@ import (
 )
 
 func TestCart_AddItem(t *testing.T) {
-	type fields struct {
-		ID    string
-		Items []*CartItem
-	}
-	type args struct {
-		id       string
-		product  string
-		quantity int
-	}
+	type (
+		fields struct {
+			ID    string
+			Items []*CartItem
+		}
+		args struct {
+			id       string
+			product  string
+			quantity int
+		}
+	)
+
 	tests := []struct {
 		name          string
 		fields        fields
@@ -24,7 +27,6 @@ func TestCart_AddItem(t *testing.T) {
 		wantErr       bool
 		expectedErr   error
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Test 0 quantity add",
 			fields: fields{
@@ -79,6 +81,7 @@ func TestCart_AddItem(t *testing.T) {
 			expectedErr:   nil,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Cart{
@@ -105,13 +108,15 @@ func TestCart_AddItem(t *testing.T) {
 }
 
 func TestCart_RemoveItem(t *testing.T) {
-	type fields struct {
-		ID    string
-		Items []*CartItem
-	}
-	type args struct {
-		id string
-	}
+	type (
+		fields struct {
+			ID    string
+			Items []*CartItem
+		}
+		args struct {
+			id string
+		}
+	)
 
 	testCart := fields{
 		ID: "CartID",
@@ -150,7 +155,6 @@ func TestCart_RemoveItem(t *testing.T) {
 		wantErr     bool
 		expectedErr error
 	}{
-		// TODO: Add test cases.
 		{
 			name:   "No such item",
 			fields: testCart,

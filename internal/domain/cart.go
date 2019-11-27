@@ -9,7 +9,6 @@ type (
 )
 
 func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, err error) {
-
 	item := &CartItem{
 		ID:       id,
 		CartID:   c.ID,
@@ -23,18 +22,21 @@ func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, e
 
 	//c.Items[id] = item
 	c.Items = append(c.Items, item)
+
 	return item, nil
 }
 
 func (c *Cart) RemoveItem(id string) (err error) {
-
-	var ok bool
-	var idx int
+	var (
+		ok  bool
+		idx int
+	)
 
 	for pos, item := range c.Items {
 		if item.ID == id {
 			ok = true
 			idx = pos
+
 			break
 		}
 	}

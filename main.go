@@ -23,6 +23,7 @@ func getEnv(env, def string) string {
 	if !exists {
 		value = def
 	}
+
 	return value
 }
 
@@ -38,7 +39,9 @@ func run(c *cli.Context) error {
 	}
 
 	srv := fmt.Sprint(getEnv("HOST", "0.0.0.0"), ":", getEnv("PORT", "8080"))
+
 	log.Printf("service address: %v", srv)
+
 	return http.ListenAndServe(srv, routing.RouterInit(repo, repo))
 }
 

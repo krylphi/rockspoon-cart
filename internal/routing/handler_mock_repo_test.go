@@ -2,9 +2,10 @@ package routing
 
 import (
 	"context"
+	"strconv"
+
 	"github.com/Krylphi/rockspoon-cart/internal/domain"
 	"github.com/Krylphi/rockspoon-cart/internal/repository"
-	"strconv"
 )
 
 type (
@@ -15,7 +16,7 @@ type (
 
 func InitMockRepo() repository.CartRepository {
 	res := &cartMockRepository{
-		carts: make(map[string]*domain.Cart, 0),
+		carts: make(map[string]*domain.Cart),
 	}
 
 	ctx := context.Background()
@@ -28,6 +29,7 @@ func InitMockRepo() repository.CartRepository {
 	_, _ = res.AddItem(ctx, cart.ID, "Product5", 5)
 	_, _ = res.CreateCart(ctx)
 	_, _ = res.CreateCart(ctx)
+
 	return res
 }
 
@@ -39,6 +41,7 @@ func (c *cartMockRepository) CreateCart(ctx context.Context) (*domain.Cart, erro
 	}
 
 	c.carts[id] = cart
+
 	return cart, nil
 }
 

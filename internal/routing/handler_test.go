@@ -3,6 +3,7 @@ package routing
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,7 +17,6 @@ func initRouting() *mux.Router {
 }
 
 func Test_Handlers(t *testing.T) {
-
 	type ciResponse struct {
 		ID       string `json:"id,omitempty"`
 		CartID   string `json:"cart_id,omitempty"`
@@ -42,12 +42,19 @@ func Test_Handlers(t *testing.T) {
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
+
+		defer func() {
+			err := res.Body.Close()
+			if err != nil {
+				t.Log(fmt.Sprintf("Test_HandleNewCart() error, while closing request body: %v", err.Error()))
+			}
+		}()
+
 		if res.StatusCode != http.StatusOK {
 			t.Errorf("Test_HandleNewCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
 
 		decoder := json.NewDecoder(res.Body)
-
 		var cartRes cartResponse
 		err = decoder.Decode(&cartRes)
 		if err != nil {
@@ -71,8 +78,15 @@ func Test_Handlers(t *testing.T) {
 		}
 
 		decoder := json.NewDecoder(res.Body)
+		defer func() {
+			err := res.Body.Close()
+			if err != nil {
+				t.Log(fmt.Sprintf("Test_HandleGetCart() error, while closing request body: %v", err.Error()))
+			}
+		}()
 
 		var response cartResponse
+
 		err = decoder.Decode(&response)
 		if err != nil {
 			t.Errorf("Test_HandleGetCartFail() Failed to deserialize response error %v", err)
@@ -90,6 +104,12 @@ func Test_Handlers(t *testing.T) {
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
+		defer func() {
+			err := res.Body.Close()
+			if err != nil {
+				t.Log(fmt.Sprintf("Test_HandleGetCart() error, while closing request body: %v", err.Error()))
+			}
+		}()
 		if res.StatusCode != http.StatusBadRequest {
 			t.Errorf("Test_HandleGetCartFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
