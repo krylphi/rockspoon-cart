@@ -33,7 +33,6 @@ func run(c *cli.Context) error {
 		Database:        getEnv(EnvCartDatabase, "rockspoon-cart-0"),
 		UsersCollection: getEnv(EnvCartNamespace, "carts"),
 	})
-
 	if err != nil {
 		return err
 	}

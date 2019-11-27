@@ -42,7 +42,6 @@ func Test_Handlers(t *testing.T) {
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
-
 		defer func() {
 			err := res.Body.Close()
 			if err != nil {
@@ -73,6 +72,12 @@ func Test_Handlers(t *testing.T) {
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
+		defer func() {
+			err := res.Body.Close()
+			if err != nil {
+				t.Log(fmt.Sprintf("Test_HandleGetCart() error, while closing request body: %v", err.Error()))
+			}
+		}()
 		if res.StatusCode != http.StatusOK {
 			t.Errorf("Test_HandleGetCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
@@ -126,6 +131,12 @@ func Test_Handlers(t *testing.T) {
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
+		defer func() {
+			err := res.Body.Close()
+			if err != nil {
+				t.Log(fmt.Sprintf("Test_HandleDeleteCart() error, while closing request body: %v", err.Error()))
+			}
+		}()
 		if res.StatusCode != http.StatusOK {
 			t.Errorf("Test_HandleDeleteCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
