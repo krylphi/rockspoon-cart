@@ -2,6 +2,8 @@ package routing
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Krylphi/rockspoon-cart/internal/domain"
@@ -19,8 +21,9 @@ type EndpointFactory interface {
 	HandleGetCart(cartIDParam string) HttpEndpoint
 }
 
-func RouterInit(r *mux.Router, write repository.CartWriteRepository, read repository.CartReadRepository) *mux.Router {
+func RouterInit(write repository.CartWriteRepository, read repository.CartReadRepository) *mux.Router {
 	fac := NewEndpointFactory(write, read)
+	r := mux.NewRouter()
 
 	// Heartbeat
 	r.HandleFunc(
@@ -87,19 +90,23 @@ func (f *endpointFactory) HandleNewCart() HttpEndpoint {
 func (f *endpointFactory) HandleAddItem(cartIDParam string) HttpEndpoint {
 	return func(w http.ResponseWriter, r *http.Request) HttpResponse {
 		decoder := json.NewDecoder(r.Body)
+		defer func() {
+			err := r.Body.Close()
+			if err != nil {
+				log.Print(fmt.Sprintf("HandleAddItem() error, while closing request body: %v", err.Error()))
+			}
+		}()
 
 		var cartItem domain.CartItem
 		err := decoder.Decode(&cartItem)
-
-		vars := mux.Vars(r)
-		cartID := vars[cartIDParam]
-
 		if err != nil {
 			return BadRequestErrResp(err)
 		}
 
-		res, err := f.write.AddItem(r.Context(), cartID, cartItem.Product, cartItem.Quantity)
+		vars := mux.Vars(r)
+		cartID := vars[cartIDParam]
 
+		res, err := f.write.AddItem(r.Context(), cartID, cartItem.Product, cartItem.Quantity)
 		if err != nil {
 			return BadRequestErrResp(err)
 		}
@@ -116,7 +123,6 @@ func (f *endpointFactory) HandleRemoveItem(cartIDParam, itemIDParam string) Http
 		itemID := vars[itemIDParam]
 
 		err := f.write.RemoveItem(r.Context(), cartID, itemID)
-
 		if err != nil {
 			return BadRequestErrResp(err)
 		}
@@ -132,7 +138,6 @@ func (f *endpointFactory) HandleDeleteCart(cartIDParam string) HttpEndpoint {
 		cartID := vars[cartIDParam]
 
 		err := f.write.DeleteCart(r.Context(), cartID)
-
 		if err != nil {
 			return BadRequestErrResp(err)
 		}
@@ -148,7 +153,6 @@ func (f *endpointFactory) HandleGetCart(cartIDParam string) HttpEndpoint {
 		id := vars[cartIDParam]
 
 		res, err := f.read.Cart(r.Context(), id)
-
 		if err != nil {
 			return BadRequestErrResp(err)
 		}

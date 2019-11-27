@@ -12,8 +12,7 @@ import (
 
 func initRouting() *mux.Router {
 	repo := InitMockRepo()
-	router := mux.NewRouter()
-	return RouterInit(router, repo, repo)
+	return RouterInit(repo, repo)
 }
 
 func Test_Handlers(t *testing.T) {

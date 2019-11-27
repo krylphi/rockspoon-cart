@@ -2,6 +2,7 @@ package routing
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -44,7 +45,10 @@ func Json(fn HttpEndpoint) HttpHandler {
 		}
 
 		w.WriteHeader(d.StatusCode())
-		json.NewEncoder(w).Encode(d.Response())
+		err := json.NewEncoder(w).Encode(d.Response())
+		if err != nil {
+			log.Printf("Json() error, while encoding response: %v", err.Error())
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
+)
+
+const (
+	EnvConnectionString = "CONNSTR"
+	EnvCartDatabase = "CARTDB"
+	EnvCartNamespace = "CARTNAMESPACE"
 )
 
 var (
@@ -35,18 +42,16 @@ var flags = []cli.Flag{
 }
 
 func run(c *cli.Context) error {
-	r := mux.NewRouter()
-
 	repo, err := mongo.NewMongoRepository(&mongo.Config{
-		ConnStr:         getEnv("CONNSTR", "mongodb://localhost:27017"),
-		Database:        getEnv("USERDB", "rockspoon-cart-0"),
-		UsersCollection: getEnv("USERNAMESPACE", "carts"),
+		ConnStr:         getEnv(EnvConnectionString, "mongodb://localhost:27017"),
+		Database:        getEnv(EnvCartDatabase, "rockspoon-cart-0"),
+		UsersCollection: getEnv(EnvCartNamespace, "carts"),
 	})
 
 	if err != nil {
 		return err
 	}
-	return http.ListenAndServe(getEnv("HOST", "0.0.0.0")+":"+getEnv("PORT", "8080"), routing.RouterInit(r, repo, repo))
+	return http.ListenAndServe(fmt.Sprintf(getEnv("HOST", "0.0.0.0"),":", getEnv("PORT", "8080")), routing.RouterInit(repo, repo))
 }
 
 func main() {
