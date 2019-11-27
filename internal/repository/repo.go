@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"rockspoon-cart/internal/domain"
+	"github.com/Krylphi/rockspoon-cart/internal/domain"
 )
 
 // CartWriteRepository used for wring data to DB

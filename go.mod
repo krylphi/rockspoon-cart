@@ -1,4 +1,4 @@
-module rockspoon-cart
+module github.com/Krylphi/rockspoon-cart
 
 go 1.13
 
@@ -7,7 +7,6 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/mux v1.7.3
-	github.com/satori/go.uuid v1.2.0
 	github.com/stretchr/testify v1.4.0 // indirect
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/urfave/cli v1.22.2

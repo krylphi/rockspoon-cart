@@ -2,8 +2,8 @@ package routing
 
 import (
 	"context"
-	"rockspoon-cart/internal/domain"
-	"rockspoon-cart/internal/repository"
+	"github.com/Krylphi/rockspoon-cart/internal/domain"
+	"github.com/Krylphi/rockspoon-cart/internal/repository"
 	"strconv"
 )
 

@@ -2,10 +2,12 @@ package routing
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"net/http"
-	"rockspoon-cart/internal/domain"
-	"rockspoon-cart/internal/repository"
+
+	"github.com/Krylphi/rockspoon-cart/internal/domain"
+	"github.com/Krylphi/rockspoon-cart/internal/repository"
+
+	"github.com/gorilla/mux"
 )
 
 type EndpointFactory interface {

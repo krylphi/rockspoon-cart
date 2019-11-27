@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"rockspoon-cart/internal/repository/mongo"
-	"rockspoon-cart/internal/routing"
+
+	"github.com/Krylphi/rockspoon-cart/internal/repository/mongo"
+	"github.com/Krylphi/rockspoon-cart/internal/routing"
 
 	"github.com/gorilla/mux"
 	"github.com/urfave/cli"
@@ -44,7 +44,7 @@ func run(c *cli.Context) error {
 	})
 
 	if err != nil {
-		log.Fatal("Couldn't initialize Mongo Repository")
+		return err
 	}
 	return http.ListenAndServe(getEnv("HOST", "0.0.0.0")+":"+getEnv("PORT", "8080"), routing.RouterInit(r, repo, repo))
 }
@@ -58,5 +58,5 @@ func main() {
 	app.Flags = flags
 	app.Action = run
 
-	fmt.Println(app.Run(os.Args))
+	log.Fatal(app.Run(os.Args))
 }
