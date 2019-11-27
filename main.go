@@ -56,8 +56,8 @@ func run(c *cli.Context) error {
 func main() {
 	app := cli.NewApp()
 	app.Name = "User Management API"
-	app.Usage = "provide capabilities of creating updating, deleting users"
-	app.UsageText = "user-manager-api [global options]"
+	app.Usage = "provide capabilities of creating updating, deleting shopping carts"
+	app.UsageText = "rockspoon-cart [global options]"
 	app.Version = version
 	app.Flags = flags
 	app.Action = run
