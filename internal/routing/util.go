@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-// HTTPHandler is handler function
+// HTTPHandler is handler function.
 type HTTPHandler func(w http.ResponseWriter, r *http.Request)
 
-// HTTPEndpoint is function for producing an HTTPResponse
+// HTTPEndpoint is function for producing an HTTPResponse.
 type HTTPEndpoint func(w http.ResponseWriter, r *http.Request) HTTPResponse
 
 // HTTPResponse contains response data, status and headers
@@ -69,7 +69,7 @@ func Resp(status int, data interface{}) HTTPResponse {
 	}
 }
 
-// OK produces HTTPResponse with 200 status code
+// OK produces HTTPResponse with 200 status code.
 func OK(d interface{}) HTTPResponse {
 	return Resp(http.StatusOK, d)
 }
