@@ -12,7 +12,7 @@ type HTTPHandler func(w http.ResponseWriter, r *http.Request)
 // HTTPEndpoint is function for producing an HTTPResponse.
 type HTTPEndpoint func(w http.ResponseWriter, r *http.Request) HTTPResponse
 
-// HTTPResponse contains response data, status and headers
+// HTTPResponse contains response data, status and headers.
 type HTTPResponse interface {
 	Headers() map[string]string
 	Response() interface{}
