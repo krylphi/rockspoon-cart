@@ -16,9 +16,9 @@ const (
 	// EnvConnectionString is an environment variable for connection string.
 	EnvConnectionString = "CONNSTR"
 	// EnvCartDatabase is an environment variable for Database name.
-	EnvCartDatabase     = "CARTDB"
-	//EnvCartNamespace is an environment variable for Namespace name
-	EnvCartNamespace    = "CARTNAMESPACE"
+	EnvCartDatabase = "CARTDB"
+	//EnvCartNamespace is an environment variable for Namespace name.
+	EnvCartNamespace = "CARTNAMESPACE"
 )
 
 func getEnv(env, def string) string {

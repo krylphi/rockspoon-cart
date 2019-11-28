@@ -1,14 +1,14 @@
 package domain
 
 type (
-	//Cart is domain model for cart entity
+	//Cart is domain model for cart entity.
 	Cart struct {
 		ID    string      `json:"id"`
 		Items []*CartItem `json:"items"`
 	}
 )
 
-// AddItem adds item to the cart
+// AddItem adds item to the cart.
 func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, err error) {
 	item := &CartItem{
 		ID:       id,
@@ -27,7 +27,7 @@ func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, e
 	return item, nil
 }
 
-// RemoveItem removes item from the cart
+// RemoveItem removes item from the cart.
 func (c *Cart) RemoveItem(id string) (err error) {
 	var (
 		ok  bool

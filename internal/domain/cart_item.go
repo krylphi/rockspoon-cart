@@ -1,7 +1,7 @@
 package domain
 
 type (
-	//CartItem is item in Cart
+	//CartItem is item in Cart.
 	CartItem struct {
 		ID       string `json:"id"`
 		CartID   string `json:"cart_id"`
@@ -10,7 +10,7 @@ type (
 	}
 )
 
-// Validate validates correctness of the CartItem's data
+// Validate validates correctness of the CartItem's data.
 func (ci CartItem) Validate() error {
 	if len(ci.Product) == 0 {
 		return ErrEmptyProduct

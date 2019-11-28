@@ -14,7 +14,7 @@ import (
 )
 
 type (
-	// Config is used for repository configuration parameters
+	// Config is used for repository configuration parameters.
 	Config struct {
 		ConnStr         string
 		Database        string
@@ -32,7 +32,7 @@ type (
 	}
 )
 
-// NewMongoRepository is a constructor for Repository instance with Mongo implementation
+// NewMongoRepository is a constructor for Repository instance with Mongo implementation.
 func NewMongoRepository(c *Config) (repository.CartRepository, error) {
 	// Set client options
 	clientOptions := options.Client().ApplyURI(c.ConnStr)
