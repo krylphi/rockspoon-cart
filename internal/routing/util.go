@@ -6,34 +6,38 @@ import (
 	"net/http"
 )
 
+// HTTPHandler is handler function
 type HTTPHandler func(w http.ResponseWriter, r *http.Request)
 
+// HTTPEndpoint is function for producing an HTTPResponse
 type HTTPEndpoint func(w http.ResponseWriter, r *http.Request) HTTPResponse
 
+// HTTPResponse contains response data, status and headers
 type HTTPResponse interface {
 	Headers() map[string]string
 	Response() interface{}
 	StatusCode() int
 }
 
-type Response struct {
+type response struct {
 	Status     int
 	Data       interface{}
 	HeaderData map[string]string
 }
 
-func (e *Response) Response() interface{} {
+func (e *response) Response() interface{} {
 	return e.Data
 }
 
-func (e *Response) StatusCode() int {
+func (e *response) StatusCode() int {
 	return e.Status
 }
 
-func (e *Response) Headers() map[string]string {
+func (e *response) Headers() map[string]string {
 	return e.HeaderData
 }
 
+// JSON produces jsonified response.
 func JSON(fn HTTPEndpoint) HTTPHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
 		d := fn(w, r)
@@ -52,26 +56,31 @@ func JSON(fn HTTPEndpoint) HTTPHandler {
 	}
 }
 
-func Err(status int, data interface{}) *Response {
+// Err produces custom error message HTTPResponse.
+func Err(status int, data interface{}) HTTPResponse {
 	return Resp(status, data)
 }
 
-func Resp(status int, data interface{}) *Response {
-	return &Response{
+// Resp produces regular HTTPResponse.
+func Resp(status int, data interface{}) HTTPResponse {
+	return &response{
 		Status: status,
 		Data:   data,
 	}
 }
 
-func OK(d interface{}) *Response {
+// OK produces HTTPResponse with 200 status code
+func OK(d interface{}) HTTPResponse {
 	return Resp(http.StatusOK, d)
 }
 
-func Created(d interface{}) *Response {
+// Created produces HTTPResponse with 201 status code.
+func Created(d interface{}) HTTPResponse {
 	return Resp(http.StatusCreated, d)
 }
 
-func BadRequestErrResp(err error) *Response {
+// BadRequestErrResp produces HTTPResponse woth err description and 401 status code.
+func BadRequestErrResp(err error) HTTPResponse {
 	return Err(http.StatusBadRequest, struct {
 		Error string `json:"error"`
 	}{Error: err.Error()})

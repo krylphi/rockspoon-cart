@@ -10,6 +10,7 @@ type (
 	}
 )
 
+// Validate validates correctness of the CartItem's data
 func (ci CartItem) Validate() error {
 	if len(ci.Product) == 0 {
 		return ErrEmptyProduct

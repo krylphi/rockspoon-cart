@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// EndpointFactory is meant to produce handlers for endpoints.
 type EndpointFactory interface {
 	HandleHeartbeat() HTTPEndpoint
 	HandleNewCart() HTTPEndpoint
@@ -21,6 +22,7 @@ type EndpointFactory interface {
 	HandleGetCart(cartIDParam string) HTTPEndpoint
 }
 
+// RouterInit initialize routing and assigning endpoints with handlers.
 func RouterInit(write repository.CartWriteRepository, read repository.CartReadRepository) *mux.Router {
 	fac := NewEndpointFactory(write, read)
 	r := mux.NewRouter()
@@ -60,6 +62,7 @@ type endpointFactory struct {
 	read  repository.CartReadRepository
 }
 
+// NewEndpointFactory produces instance of EndpointFactory implementation.
 func NewEndpointFactory(write repository.CartWriteRepository, read repository.CartReadRepository) EndpointFactory {
 	return &endpointFactory{
 		write: write,

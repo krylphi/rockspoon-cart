@@ -8,6 +8,7 @@ type (
 	}
 )
 
+// AddItem adds item to the cart
 func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, err error) {
 	item := &CartItem{
 		ID:       id,
@@ -26,6 +27,7 @@ func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, e
 	return item, nil
 }
 
+// RemoveItem removes item from the cart
 func (c *Cart) RemoveItem(id string) (err error) {
 	var (
 		ok  bool
