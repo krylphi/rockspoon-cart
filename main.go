@@ -19,6 +19,10 @@ const (
 	EnvCartDatabase = "CARTDB"
 	//EnvCartNamespace is an environment variable for Namespace name.
 	EnvCartNamespace = "CARTNAMESPACE"
+	// EnvHost is an environment variable for defining service's host
+	EnvHost = "HOST"
+	// EnvHost is an environment variable for defining service's port
+	EnvPort = "PORT"
 )
 
 func getEnv(env, def string) string {
@@ -40,7 +44,7 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	srv := fmt.Sprint(getEnv("HOST", "0.0.0.0"), ":", getEnv("PORT", "8080"))
+	srv := fmt.Sprint(getEnv(EnvHost, "0.0.0.0"), ":", getEnv(EnvPort, "8080"))
 
 	log.Printf("service address: %v", srv)
 
@@ -70,5 +74,8 @@ func main() {
 	app.Flags = flags
 	app.Action = run
 
-	log.Fatal(app.Run(os.Args))
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
