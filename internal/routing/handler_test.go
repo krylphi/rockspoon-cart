@@ -3,15 +3,12 @@ package routing
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/gorilla/mux"
 )
 
-func initRouting() *mux.Router {
+func initRouting() http.Handler {
 	repo := InitMockRepo()
 	return RouterInit(repo, repo)
 }
@@ -31,12 +28,12 @@ func Test_Handlers(t *testing.T) {
 
 	jsonVal := bytes.NewBuffer([]byte(`{"product": "Shoes","quantity": 10}`))
 
-	t.Run("Test_HandleNewCart", func(t *testing.T) {
+	t.Run("HandleNewCart", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodPost, "/carts", nil)
 		if err != nil {
-			t.Errorf("Test_HandleNewCart() Request initialization error %v", err)
+			t.Fatalf("HandleNewCart() Request initialization error %v", err)
 		}
 
 		router.ServeHTTP(w, request)
@@ -45,28 +42,28 @@ func Test_Handlers(t *testing.T) {
 		defer func() {
 			err := res.Body.Close()
 			if err != nil {
-				t.Log(fmt.Sprintf("Test_HandleNewCart() error, while closing request body: %v", err.Error()))
+				t.Logf("HandleNewCart() error, while closing request body: %v", err.Error())
 			}
 		}()
 
 		if res.StatusCode != http.StatusOK {
-			t.Errorf("Test_HandleNewCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
+			t.Fatalf("HandleNewCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
 
 		decoder := json.NewDecoder(res.Body)
 		var cartRes cartResponse
 		err = decoder.Decode(&cartRes)
 		if err != nil {
-			t.Errorf("Test_HandleNewCart() Failed to deserialize response error %v", err)
+			t.Fatalf("HandleNewCart() Failed to deserialize response error %v", err)
 		}
 	})
 
-	t.Run("Test_HandleGetCart", func(t *testing.T) {
+	t.Run("HandleGetCart", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodGet, "/carts/1", nil)
 		if err != nil {
-			t.Errorf("Test_HandleGetCart() Request initialization error %v", err)
+			t.Fatalf("HandleGetCart() Request initialization error %v", err)
 		}
 
 		router.ServeHTTP(w, request)
@@ -75,18 +72,18 @@ func Test_Handlers(t *testing.T) {
 		defer func() {
 			err := res.Body.Close()
 			if err != nil {
-				t.Log(fmt.Sprintf("Test_HandleGetCart() error, while closing request body: %v", err.Error()))
+				t.Logf("HandleGetCart() error, while closing request body: %v", err.Error())
 			}
 		}()
 		if res.StatusCode != http.StatusOK {
-			t.Errorf("Test_HandleGetCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
+			t.Fatalf("HandleGetCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
 
 		decoder := json.NewDecoder(res.Body)
 		defer func() {
 			err := res.Body.Close()
 			if err != nil {
-				t.Log(fmt.Sprintf("Test_HandleGetCart() error, while closing request body: %v", err.Error()))
+				t.Logf("HandleGetCart() error, while closing request body: %v", err.Error())
 			}
 		}()
 
@@ -94,16 +91,16 @@ func Test_Handlers(t *testing.T) {
 
 		err = decoder.Decode(&response)
 		if err != nil {
-			t.Errorf("Test_HandleGetCartFail() Failed to deserialize response error %v", err)
+			t.Fatalf("HandleGetCartFail() Failed to deserialize response error %v", err)
 		}
 	})
 
-	t.Run("Test_HandleGetCartFail", func(t *testing.T) {
+	t.Run("HandleGetCartFail", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodGet, "/carts/99", nil)
 		if err != nil {
-			t.Errorf("Request initialization error %v", err)
+			t.Fatalf("Request initialization error %v", err)
 		}
 
 		router.ServeHTTP(w, request)
@@ -112,20 +109,20 @@ func Test_Handlers(t *testing.T) {
 		defer func() {
 			err := res.Body.Close()
 			if err != nil {
-				t.Log(fmt.Sprintf("Test_HandleGetCart() error, while closing request body: %v", err.Error()))
+				t.Logf("HandleGetCart() error, while closing request body: %v", err.Error())
 			}
 		}()
 		if res.StatusCode != http.StatusBadRequest {
-			t.Errorf("Test_HandleGetCartFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
+			t.Fatalf("HandleGetCartFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
 	})
 
-	t.Run("Test_HandleDeleteCart", func(t *testing.T) {
+	t.Run("HandleDeleteCart", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodDelete, "/carts/1", nil)
 		if err != nil {
-			t.Errorf("Test_HandleDeleteCart() Request initialization error %v", err)
+			t.Fatalf("HandleDeleteCart() Request initialization error %v", err)
 		}
 
 		router.ServeHTTP(w, request)
@@ -134,47 +131,43 @@ func Test_Handlers(t *testing.T) {
 		defer func() {
 			err := res.Body.Close()
 			if err != nil {
-				t.Log(fmt.Sprintf("Test_HandleDeleteCart() error, while closing request body: %v", err.Error()))
+				t.Logf("HandleDeleteCart() error, while closing request body: %v", err.Error())
 			}
 		}()
 		if res.StatusCode != http.StatusOK {
-			t.Errorf("Test_HandleDeleteCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
+			t.Fatalf("HandleDeleteCart() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
 	})
 
-	t.Run("Test_HandleDeleteCartFail", func(t *testing.T) {
+	t.Run("HandleDeleteCartFail", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodDelete, "/carts/99", nil)
 		if err != nil {
-			t.Errorf("Test_HandleDeleteCartFail() Request initialization error %v", err)
+			t.Fatalf("HandleDeleteCartFail() Request initialization error %v", err)
 		}
 
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		if res.StatusCode != http.StatusBadRequest {
-			t.Errorf("Test_HandleDeleteCartFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
+			t.Fatalf("HandleDeleteCartFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
 	})
 
-	t.Run("Test_HandleAddItem", func(t *testing.T) {
+	t.Run("HandleAddItem", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodPost, "/carts/1/items", jsonVal)
 		if err != nil {
-			t.Errorf("Test_HandleAddItem() Request initialization error %v", err)
+			t.Fatalf("HandleAddItem() Request initialization error %v", err)
 		}
 		request.Header.Set("Content-Type", "application/json")
-		if err != nil {
-			t.Errorf("Test_HandleAddItem() Request initialization error %v", err)
-		}
-
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		if res.StatusCode != http.StatusOK {
-			t.Errorf("Test_HandleAddItem() code=%v, expected %v", res.StatusCode, http.StatusOK)
+			t.Fatalf("HandleAddItem() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
 
 		decoder := json.NewDecoder(res.Body)
@@ -182,87 +175,72 @@ func Test_Handlers(t *testing.T) {
 		var ciRes ciResponse
 		err = decoder.Decode(&ciRes)
 		if err != nil {
-			t.Errorf("Test_HandleAddItem() Failed to deserialize response error %v", err)
+			t.Fatalf("HandleAddItem() Failed to deserialize response error %v", err)
 		}
 	})
 
-	t.Run("Test_HandleAddItemFail", func(t *testing.T) {
+	t.Run("HandleAddItemFail", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodPost, "/carts/99/items", jsonVal)
 		if err != nil {
-			t.Errorf("Test_HandleAddItemFail() Request initialization error %v", err)
+			t.Fatalf("HandleAddItemFail() Request initialization error %v", err)
 		}
 		request.Header.Set("Content-Type", "application/json")
-		if err != nil {
-			t.Errorf("Test_HandleAddItemFail() Request initialization error %v", err)
-		}
-
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		if res.StatusCode != http.StatusBadRequest {
-			t.Errorf("Test_HandleAddItemFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
+			t.Fatalf("HandleAddItemFail() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
 	})
 
-	t.Run("Test_HandleRemoveItem", func(t *testing.T) {
+	t.Run("HandleRemoveItem", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodDelete, "/carts/1/items/1", jsonVal)
 		if err != nil {
-			t.Errorf("Test_HandleRemoveItem() Request initialization error %v", err)
+			t.Fatalf("HandleRemoveItem() Request initialization error %v", err)
 		}
 		request.Header.Set("Content-Type", "application/json")
-		if err != nil {
-			t.Errorf("Test_HandleRemoveItem() Request initialization error %v", err)
-		}
-
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		if res.StatusCode != http.StatusOK {
-			t.Errorf("Test_HandleRemoveItem() code=%v, expected %v", res.StatusCode, http.StatusOK)
+			t.Fatalf("HandleRemoveItem() code=%v, expected %v", res.StatusCode, http.StatusOK)
 		}
 	})
 
-	t.Run("Test_HandleRemoveItemFail1", func(t *testing.T) {
+	t.Run("HandleRemoveItemFail1", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodDelete, "/carts/99/items/1", jsonVal)
 		if err != nil {
-			t.Errorf("Test_HandleRemoveItemFail1() Request initialization error %v", err)
+			t.Fatalf("HandleRemoveItemFail1() Request initialization error %v", err)
 		}
 		request.Header.Set("Content-Type", "application/json")
-		if err != nil {
-			t.Errorf("Test_HandleRemoveItemFail1() Request initialization error %v", err)
-		}
 
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		if res.StatusCode != http.StatusBadRequest {
-			t.Errorf("Test_HandleRemoveItemFail1() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
+			t.Fatalf("HandleRemoveItemFail1() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
 	})
 
-	t.Run("Test_HandleRemoveItemFail2", func(t *testing.T) {
+	t.Run("HandleRemoveItemFail2", func(t *testing.T) {
 		router := initRouting()
 		w := httptest.NewRecorder()
 		request, err := http.NewRequest(http.MethodDelete, "/carts/1/items/99", jsonVal)
 		if err != nil {
-			t.Errorf("Test_HandleRemoveItemFail1() Request initialization error %v", err)
+			t.Fatalf("HandleRemoveItemFail1() Request initialization error %v", err)
 		}
 		request.Header.Set("Content-Type", "application/json")
-		if err != nil {
-			t.Errorf("Test_HandleRemoveItemFail1() Request initialization error %v", err)
-		}
-
 		router.ServeHTTP(w, request)
 
 		res := w.Result()
 		if res.StatusCode != http.StatusBadRequest {
-			t.Errorf("Test_HandleRemoveItemFail1() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
+			t.Fatalf("HandleRemoveItemFail1() code=%v, expected %v", res.StatusCode, http.StatusBadRequest)
 		}
 	})
 }

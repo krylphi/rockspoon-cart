@@ -51,7 +51,7 @@ func TestCartItem_Validate(t *testing.T) {
 				Quantity: tt.fields.Quantity,
 			}
 			if err := ci.Validate(); (err != nil) != tt.wantErr || (tt.wantErr && tt.expectedErr != nil && err != tt.expectedErr) {
-				t.Errorf("Validate() error = %v, wantErr: %v, expectedErr: %v", err, tt.wantErr, tt.expectedErr)
+				t.Fatalf("Validate() error = %v, wantErr: %v, expectedErr: %v", err, tt.wantErr, tt.expectedErr)
 			}
 		})
 	}

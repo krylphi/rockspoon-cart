@@ -29,21 +29,15 @@ func (c *Cart) AddItem(id string, product string, quantity int) (ci *CartItem, e
 
 // RemoveItem removes item from the cart.
 func (c *Cart) RemoveItem(id string) (err error) {
-	var (
-		ok  bool
-		idx int
-	)
-
+	var idx = -1
 	for pos, item := range c.Items {
 		if item.ID == id {
-			ok = true
 			idx = pos
-
 			break
 		}
 	}
 
-	if !ok {
+	if idx == -1 {
 		return ErrNoSuchCartItem
 	}
 

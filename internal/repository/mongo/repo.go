@@ -160,11 +160,9 @@ func (repo *mongoRepository) DeleteCart(ctx context.Context, id string) error {
 	}
 
 	singleResult := repo.collection.FindOneAndDelete(ctx, bson.M{"_id": objID})
-	if singleResult != nil {
-		if singleResult.Err() != nil {
-			log.Println(singleResult.Err())
-			return singleResult.Err()
-		}
+	if singleResult != nil && singleResult.Err() != nil {
+		log.Println(singleResult.Err())
+		return singleResult.Err()
 	}
 
 	return nil

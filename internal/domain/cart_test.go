@@ -92,16 +92,16 @@ func TestCart_AddItem(t *testing.T) {
 			gotCi, err := c.AddItem(tt.args.id, tt.args.product, tt.args.quantity)
 
 			if (err != nil) != tt.wantErr || (tt.wantErr && tt.expectedErr != nil && err != tt.expectedErr) {
-				t.Errorf("AddItem() error = %v, wantErr %v", err, tt.wantErr)
+				t.Fatalf("AddItem() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
 			if !reflect.DeepEqual(gotCi, tt.wantCi) {
-				t.Errorf("AddItem() gotCi = %v, want %v", gotCi, tt.wantCi)
+				t.Fatalf("AddItem() gotCi = %v, want %v", gotCi, tt.wantCi)
 			}
 
 			if tt.expectedCiCnt != len(c.Items) {
-				t.Errorf("AddItem() gotCiCnt = %v, want %v", len(c.Items), tt.expectedCiCnt)
+				t.Fatalf("AddItem() gotCiCnt = %v, want %v", len(c.Items), tt.expectedCiCnt)
 			}
 		})
 	}
@@ -181,13 +181,13 @@ func TestCart_RemoveItem(t *testing.T) {
 			}
 			err := c.RemoveItem(tt.args.id)
 			if (err != nil) != tt.wantErr || (tt.wantErr && tt.expectedErr != nil && err != tt.expectedErr) {
-				t.Errorf("RemoveItem() error = %v, wantErr %v", err, tt.wantErr)
+				t.Fatalf("RemoveItem() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			if err == nil && !tt.wantErr {
 				for _, item := range c.Items {
 					if item.ID == tt.args.id {
-						t.Errorf("RemoveItem() item with id %v was not removed", tt.args.id)
+						t.Fatalf("RemoveItem() item with id %v was not removed", tt.args.id)
 					}
 				}
 			}

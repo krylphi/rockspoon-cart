@@ -2,7 +2,6 @@ package routing
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -23,7 +22,7 @@ type EndpointFactory interface {
 }
 
 // RouterInit initialize routing and assigning endpoints with handlers.
-func RouterInit(write repository.CartWriteRepository, read repository.CartReadRepository) *mux.Router {
+func RouterInit(write repository.CartWriteRepository, read repository.CartReadRepository) http.Handler {
 	fac := NewEndpointFactory(write, read)
 	r := mux.NewRouter()
 
@@ -96,7 +95,7 @@ func (f *endpointFactory) HandleAddItem(cartIDParam string) HTTPEndpoint {
 		defer func() {
 			err := r.Body.Close()
 			if err != nil {
-				log.Print(fmt.Sprintf("HandleAddItem() error, while closing request body: %v", err.Error()))
+				log.Printf("HandleAddItem() error, while closing request body: %v", err.Error())
 			}
 		}()
 
