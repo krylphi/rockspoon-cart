@@ -13,9 +13,8 @@ you'll be developing an API for an online shopping cart in the Go programming la
 
 1. Create a feature branch.
 2. Implement the requirements below as if this were a real Go project to be deployed.
-3. Please include tests with your submission.
-4. Submit a PR to this repository.
-5. Discuss your approach and tradeoffs via PR review.
+3. Submit a PR to this repository.
+4. Discuss your approach and tradeoffs via PR review.
 
 
 ## Requirements
